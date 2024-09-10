@@ -16,22 +16,22 @@ export const register = async (req, res, next) => {
     });
 
     if (existingUsername) {
-      return res.status(400).json({ error: 'Username already exists' });
+      return res.status(400).json({ error: '해당 아이디가 이미 존재합니다' });
     }
 
     // 아이디 형식 검증 (영어 소문자 + 숫자 조합인지 확인)
     if (!usernameRegex.test(userId)) {
-      return res.status(400).json({ error: 'Username must contain only lowercase letters and numbers' });
+      return res.status(400).json({ error: '아이디는 소문자와 숫자 조합으로만 만들 수 있습니다' });
     }
 
     // 비밀번호 길이 확인 (최소 6자 이상)
     if (password.length < 6) {
-      return res.status(400).json({ error: 'Password must be at least 6 characters long' });
+      return res.status(400).json({ error: '비밀번호는 최소 6자리 이상으로 설정해주세요' });
     }
 
     // 비밀번호와 비밀번호 확인이 일치하는지 확인
     if (password !== confirmPassword) {
-      return res.status(400).json({ error: 'Passwords do not match' });
+      return res.status(400).json({ error: '비밀번호가 서로 일치하지 않습니다' });
     }
 
     // 비밀번호 암호화
@@ -45,7 +45,7 @@ export const register = async (req, res, next) => {
       },
     });
 
-    res.status(201).json({ message: 'User registered successfully', user: { id: newUser.id, userId: newUser.userId } });
+    res.status(201).json({ message: '회원 가입에 성공하였습니다!', user: { id: newUser.id, userId: newUser.userId } });
   } catch (error) {
     next(error);
   }
@@ -61,19 +61,19 @@ export const login = async (req, res, next) => {
       });
   
       if (!user) {
-        return res.status(401).json({ error: 'Invalid username or password' });
+        return res.status(401).json({ error: '아이디가 존재하지 않거나 틀렸습니다' });
       }
   
       // 비밀번호 비교
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
-        return res.status(401).json({ error: 'Invalid username or password' });
+        return res.status(401).json({ error: '비밀번호가 틀렸습니다' });
       }
   
       // JWT 발급
       const token = jwt.sign({ id: user.id, userId: user.userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
   
-      res.json({ message: 'Login successful', token });
+      res.json({ message: '로그인 성공!!', token });
     } catch (error) {
       next(error);
     }

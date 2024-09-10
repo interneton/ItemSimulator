@@ -9,7 +9,7 @@ datasource db {
 
 model Account {
   accountId  Int        @id @default(autoincrement()) // ID 필드를 accountId로 수정
-  username   String     @unique // 사용자 아이디는 중복되지 않도록 설정
+  userId   String     @unique // 사용자 아이디는 중복되지 않도록 설정
   password   String
   characters Character[]
 
