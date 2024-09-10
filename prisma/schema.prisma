@@ -9,7 +9,7 @@ datasource db {
 
 model Account {
   accountId  Int        @id @default(autoincrement()) // ID 필드를 accountId로 수정
-  userId   String     @unique // 사용자 아이디는 중복되지 않도록 설정
+  userId     String     @unique // 사용자 아이디는 중복되지 않도록 설정
   password   String
   characters Character[]
 
@@ -26,10 +26,8 @@ model Character {
   account     Account     @relation(fields: [accountId], references: [accountId])
   accountId   Int         // 외래 키 필드로 Account 모델과 연결
   money       Int         @default(10000)  // 캐릭터 생성 시 기본 게임머니 10,000
-  str         Int         @default(10)      // 기본 힘 (STR)
-  dex         Int         @default(10)      // 기본 민첩 (DEX)
-  int         Int         @default(10)      // 기본 지능 (INT)
-  luk         Int         @default(10)      // 기본 행운 (LUK)
+  health      Int         @default(100)    // 기본 체력 (Health)
+  strength    Int         @default(10)     // 기본 힘 (Strength)
   inventory   Inventory[]
   equippedItems EquippedItem[]
 
@@ -45,10 +43,7 @@ model Item {
   type        String
   price       Int         @default(0)  // 아이템 가격
   requiredLevel Int       @default(1)  // 아이템의 요구 레벨, 기본값 1
-  str         Int         @default(0)  // 힘(STR)
-  dex         Int         @default(0)  // 민첩(DEX)
-  int         Int         @default(0)  // 지능(INT)
-  luk         Int         @default(0)  // 행운(LUK)
+  stats       Json        // 아이템의 스탯을 JSON으로 관리 (Health와 Strength 포함)
   inventory   Inventory[]
   equippedItems EquippedItem[]
 
@@ -81,7 +76,7 @@ model EquippedItem {
 
   equippedAt     DateTime  @default(now())
   createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  updatedAt      DateTime  @default(now())
 
   @@map("EquippedItem")
 }
