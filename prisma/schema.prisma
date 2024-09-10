@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  accountId  Int        @id @default(autoincrement()) // ID 필드를 accountId로 수정
+  username   String     @unique // 사용자 아이디는 중복되지 않도록 설정
+  password   String
+  characters Character[]
+
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  @@map("Account")
+}
+
+model Character {
+  characterId Int         @id @default(autoincrement()) // ID 필드를 characterId로 수정
+  name        String      @unique
+  level       Int         @default(1)
+  account     Account     @relation(fields: [accountId], references: [accountId])
+  accountId   Int         // 외래 키 필드로 Account 모델과 연결
+  money       Int         @default(10000)  // 캐릭터 생성 시 기본 게임머니 10,000
+  str         Int         @default(10)      // 기본 힘 (STR)
+  dex         Int         @default(10)      // 기본 민첩 (DEX)
+  int         Int         @default(10)      // 기본 지능 (INT)
+  luk         Int         @default(10)      // 기본 행운 (LUK)
+  inventory   Inventory[]
+  equippedItems EquippedItem[]
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("Character")
+}
+
+model Item {
+  itemId      Int         @id @default(autoincrement()) // ID 필드를 itemId로 수정
+  name        String
+  type        String
+  price       Int         @default(0)  // 아이템 가격
+  requiredLevel Int       @default(1)  // 아이템의 요구 레벨, 기본값 1
+  str         Int         @default(0)  // 힘(STR)
+  dex         Int         @default(0)  // 민첩(DEX)
+  int         Int         @default(0)  // 지능(INT)
+  luk         Int         @default(0)  // 행운(LUK)
+  inventory   Inventory[]
+  equippedItems EquippedItem[]
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @default(now())
+
+  @@map("Item")
+}
+
+model Inventory {
+  inventoryId Int         @id @default(autoincrement()) // ID 필드를 inventoryId로 수정
+  character   Character   @relation(fields: [characterId], references: [characterId])
+  characterId Int
+  item        Item        @relation(fields: [itemId], references: [itemId])
+  itemId      Int
+
+  quantity    Int         @default(1)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("Inventory")
+}
+
+model EquippedItem {
+  equippedItemId Int      @id @default(autoincrement()) // ID 필드를 equippedItemId로 수정
+  character      Character @relation(fields: [characterId], references: [characterId])
+  characterId    Int
+  item           Item      @relation(fields: [itemId], references: [itemId])
+  itemId         Int
+
+  equippedAt     DateTime  @default(now())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@map("EquippedItem")
+}
