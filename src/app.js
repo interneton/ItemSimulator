@@ -1,6 +1,5 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import { authenticateJWT } from './middlewares/authenticateJWT.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { logger } from './middlewares/logger.js';
 

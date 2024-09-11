@@ -98,7 +98,7 @@ export const getCharacterDetails = async (req, res, next) => {
       where: { characterId: parseInt(characterId, 10) },
       select: {
         name: true,
-        hp: true,
+        health: true,
         strength: true,
         accountId: true,  // 해당 캐릭터의 소유자 확인용
         money: true,  // 게임 머니 필드 (money)
@@ -113,7 +113,7 @@ export const getCharacterDetails = async (req, res, next) => {
     const isOwner = character.accountId === userAccount.accountId;
     const characterDetails = {
       name: character.name,
-      hp: character.hp,
+      health: character.health,
       strength: character.strength,
       ...(isOwner && { money: character.money }), // 본인 캐릭터일 경우에만 게임 머니 추가
     };
