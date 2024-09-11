@@ -12,10 +12,6 @@ model Account {
   userId     String     @unique // 사용자 아이디는 중복되지 않도록 설정
   password   String
   characters Character[]
-
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-
   @@map("Account")
 }
 
@@ -30,10 +26,6 @@ model Character {
   strength    Int         @default(10)     // 기본 힘 (Strength)
   inventory   Inventory[]
   equippedItems EquippedItem[]
-
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-
   @@map("Character")
 }
 
@@ -46,10 +38,6 @@ model Item {
   stats       Json        // 아이템의 스탯을 JSON으로 관리 (Health와 Strength 포함)
   inventory   Inventory[]
   equippedItems EquippedItem[]
-
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @default(now())
-
   @@map("Item")
 }
 
@@ -59,11 +47,7 @@ model Inventory {
   characterId Int
   item        Item        @relation(fields: [itemId], references: [itemId])
   itemId      Int
-
   quantity    Int         @default(1)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-
   @@map("Inventory")
 }
 
@@ -75,8 +59,5 @@ model EquippedItem {
   itemId         Int
 
   equippedAt     DateTime  @default(now())
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @default(now())
-
   @@map("EquippedItem")
 }

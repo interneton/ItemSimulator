@@ -71,7 +71,7 @@ export const login = async (req, res, next) => {
       }
   
       // JWT 발급
-      const token = jwt.sign({ id: user.id, userId: user.userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      const token = jwt.sign({ id: user.accountId, userId: user.userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
   
       res.json({ message: '로그인 성공!!', token });
     } catch (error) {
