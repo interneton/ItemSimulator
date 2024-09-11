@@ -1,42 +1,18 @@
 import jwt from 'jsonwebtoken';
+import { config } from '../config.js';  // config.js에서 설정 불러오기
 
-/**
- * JWT 인증 미들웨어
- */
 export const authenticateJWT = (req, res, next) => {
-  const authHeader = req.headers.authorization;
+  const token = req.headers.authorization?.split(' ')[1];
 
-  if (!authHeader) {
-    const error = new Error('Authorization header is missing');
-    error.statusCode = 401;
-    return next(error); // next()를 통해 에러 미들웨어로 전달
-  }
-
-  const tokenParts = authHeader.split(' ');
-
-  if (tokenParts[0] !== 'Bearer' || tokenParts.length !== 2) {
-    const error = new Error('Authorization header must be in the format: Bearer <token>');
-    error.statusCode = 400;
-    return next(error);
-  }
-
-  const token = tokenParts[1];
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) {
-      if (err.name === 'TokenExpiredError') {
-        const error = new Error('JWT has expired');
-        error.statusCode = 401;
-        return next(error);
-      } else {
-        const error = new Error('Invalid JWT token');
-        error.statusCode = 403;
-        return next(error);
+  if (token) {
+    jwt.verify(token, config.jwtSecret, (err, user) => {  // config.jwtSecret 사용
+      if (err) {
+        return res.status(403).json({ error: 'Invalid token' });
       }
-    }
-
-    req.locals = req.locals || {};
-    req.locals.user = user;
-    next();
-  });
+      req.locals.user = user;
+      next();
+    });
+  } else {
+    res.status(401).json({ error: 'Authorization header missing' });
+  }
 };
