@@ -2,6 +2,8 @@ import {
   purchaseItemForCharacter,  sellItemFromCharacter,  equipItemToCharacter,  unequipItemFromCharacter,  findAllItems,  findItemById, createItem, updateItem,
 } from '../services/itemService.js';
 import { asyncHandler } from '../middlewares/errorHandler.js';
+import { CustomError } from '../utils/customError.js';
+import { validateId } from '../utils/validateId.js'; 
 
 // 아이템 생성
 export const createNewItem = asyncHandler(async (req, res) => {
@@ -17,10 +19,11 @@ export const modifyItem = asyncHandler(async (req, res) => {
   const { itemId } = req.params;
   const { name, price, stats } = req.body;
 
-  const updatedItem = await updateItem(itemId, name, price, stats);
+  const parsedItemId = validateId(itemId);
+  const updatedItem = await updateItem(parsedItemId, name, price, stats);
 
   if (!updatedItem) {
-    return res.status(404).json({ error: '아이템을 찾을 수 없습니다.' });
+    throw new CustomError('아이템을 찾을 수 없습니다.', 404);
   }
 
   res.status(200).json({ message: '아이템 수정 완료', item: updatedItem });
@@ -36,10 +39,11 @@ export const getAllItems = asyncHandler(async (req, res) => {
 export const getItemById = asyncHandler(async (req, res) => {
   const { itemId } = req.params;
 
-  const item = await findItemById(itemId); // 서비스 계층 호출
+  const parsedItemId = validateId(itemId);
+  const item = await findItemById(parsedItemId); // 서비스 계층 호출
 
   if (!item) {
-    return res.status(404).json({ error: '아이템을 찾을 수 없습니다.' });
+    throw new CustomError('아이템을 찾을 수 없습니다.', 404);
   }
 
   res.status(200).json(item);
@@ -49,21 +53,17 @@ export const getItemById = asyncHandler(async (req, res) => {
 export const purchaseItem = asyncHandler(async (req, res) => {
   const { characterId } = req.params;
   const { itemId, quantity } = req.body;
-  const accountId = req.user?.accountId; // JWT 인증된 사용자 정보
+  const accountId = req.user?.accountId;
 
-  // characterId를 정수로 변환 및 유효성 검사
-  const parsedCharacterId = parseInt(characterId, 10);
-  if (isNaN(parsedCharacterId)) {
-    return res.status(400).json({ error: '유효하지 않은 characterId입니다.' });
-  }
+  const parsedCharacterId = validateId(characterId);
+  const parsedItemId = validateId(itemId);
 
-  const result = await purchaseItemForCharacter(parsedCharacterId, itemId, quantity, accountId);
-
+  const result = await purchaseItemForCharacter(parsedCharacterId, parsedItemId, quantity, accountId);
   if (result.error) {
-    return res.status(result.statusCode).json({ error: result.error });
+    throw new CustomError(result.error, result.statusCode);
   }
 
-  res.status(result.statusCode).json({
+  res.status(200).json({
     message: '아이템 구매 완료',
     remainingMoney: result.data.money,
   });
@@ -73,21 +73,17 @@ export const purchaseItem = asyncHandler(async (req, res) => {
 export const sellItem = asyncHandler(async (req, res) => {
   const { characterId } = req.params;
   const { itemId, quantity } = req.body;
-  const accountId = req.user?.accountId; // JWT 인증된 사용자 정보
+  const accountId = req.user?.accountId;
 
-  // characterId를 정수로 변환 및 유효성 검사
-  const parsedCharacterId = parseInt(characterId, 10);
-  if (isNaN(parsedCharacterId)) {
-    return res.status(400).json({ error: '유효하지 않은 characterId입니다.' });
-  }
+  const parsedCharacterId = validateId(characterId);
+  const parsedItemId = validateId(itemId);
 
-  const result = await sellItemFromCharacter(parsedCharacterId, itemId, quantity, accountId);
-
+  const result = await sellItemFromCharacter(parsedCharacterId, parsedItemId, quantity, accountId);
   if (result.error) {
-    return res.status(result.statusCode).json({ error: result.error });
+    throw new CustomError(result.error, result.statusCode);
   }
 
-  res.status(result.statusCode).json({
+  res.status(200).json({
     message: '아이템 판매 완료',
     remainingMoney: result.data.money,
   });
@@ -99,19 +95,16 @@ export const equipItem = asyncHandler(async (req, res) => {
   const { itemId } = req.body;
   const accountId = req.user?.accountId;
 
-  // characterId를 정수로 변환 및 유효성 검사
-  const parsedCharacterId = parseInt(characterId, 10);
-  if (isNaN(parsedCharacterId)) {
-    return res.status(400).json({ error: '유효하지 않은 characterId입니다.' });
-  }
+  const parsedCharacterId = validateId(characterId);
+  const parsedItemId = validateId(itemId);
 
-  const result = await equipItemToCharacter(parsedCharacterId, itemId, accountId);
+  const result = await equipItemToCharacter(parsedCharacterId, parsedItemId, accountId);
 
   if (result.error) {
-    return res.status(result.statusCode).json({ error: result.error });
+    throw new CustomError(result.error, result.statusCode);
   }
 
-  res.status(result.statusCode).json({
+  res.status(200).json({
     message: '아이템 장착 완료',
     updatedStats: result.data,
   });
@@ -123,19 +116,16 @@ export const unequipItem = asyncHandler(async (req, res) => {
   const { itemId } = req.body;
   const accountId = req.user?.accountId;
 
-  // characterId를 정수로 변환 및 유효성 검사
-  const parsedCharacterId = parseInt(characterId, 10);
-  if (isNaN(parsedCharacterId)) {
-    return res.status(400).json({ error: '유효하지 않은 characterId입니다.' });
-  }
+  const parsedCharacterId = validateId(characterId);
+  const parsedItemId = validateId(itemId);
 
-  const result = await unequipItemFromCharacter(parsedCharacterId, itemId, accountId);
+  const result = await unequipItemFromCharacter(parsedCharacterId, parsedItemId, accountId);
 
   if (result.error) {
-    return res.status(result.statusCode).json({ error: result.error });
+    throw new CustomError(result.error, result.statusCode);
   }
 
-  res.status(result.statusCode).json({
+  res.status(200).json({
     message: '아이템 탈착 완료',
     updatedStats: result.data,
   });

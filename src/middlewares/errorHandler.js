@@ -5,6 +5,6 @@ export const asyncHandler = (fn) => (req, res, next) => {
 
 // 전역 에러 핸들러
 export const errorHandler = (err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Internal Server Error' });
+  const statusCode = err.statusCode || 500;
+  res.status(statusCode).json({ error: err.message || 'Internal Server Error' });
 };
