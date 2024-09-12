@@ -17,7 +17,7 @@ export const register = asyncHandler(async (req, res) => {
     return res.status(400).json({ error: '비밀번호가 일치하지 않습니다.' });
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(password, 12);  // 강력한 해싱 라운드 적용
   const newUser = await createUser(userId, hashedPassword);
 
   res.status(201).json({ message: '회원 가입 성공', user: { id: newUser.id, userId: newUser.userId } });
@@ -32,11 +32,11 @@ export const login = asyncHandler(async (req, res) => {
     return res.status(401).json({ error: '아이디가 존재하지 않습니다.' });
   }
 
-  const isValidPassword = await bcrypt.compare(password, user.password);
-  if (!isValidPassword) {
-    return res.status(401).json({ error: '비밀번호가 틀렸습니다.' });
+  const isPasswordCorrect = await bcrypt.compare(password, user.password);
+  if (!isPasswordCorrect) {
+    return res.status(401).json({ error: '비밀번호가 일치하지 않습니다.' });
   }
 
-  const token = jwt.sign({ id: user.accountId, userId: user.userId }, config.jwtSecret, { expiresIn: '1h' });
+  const token = jwt.sign({ userId: user.userId,  accountId: user.accountId }, config.jwtSecret, { expiresIn: '1h' });  // 토큰 만료 시간 1시간 설정
   res.json({ message: '로그인 성공', token });
 });

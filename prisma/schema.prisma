@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Account {
-  accountId  Int        @id @default(autoincrement()) // ID 필드를 accountId로 수정
+  accountId  Int        @id @default(autoincrement())
   userId     String     @unique // 사용자 아이디는 중복되지 않도록 설정
   password   String
   characters Character[]
@@ -16,7 +16,7 @@ model Account {
 }
 
 model Character {
-  characterId Int         @id @default(autoincrement()) // ID 필드를 characterId로 수정
+  characterId Int         @id @default(autoincrement())
   name        String      @unique
   level       Int         @default(1)
   accountId   Int         // 외래 키 필드로 Account 모델과 연결
@@ -27,39 +27,38 @@ model Character {
   inventory   Inventory[]
   equippedItems EquippedItem[]
 
-  account     Account     @relation(fields: [accountId], references: [accountId])
+  account     Account     @relation(fields: [accountId], references: [accountId],  onDelete: Cascade)
 
   @@map("Character")
 }
 
 model Item {
-  itemId      Int         @id @default(autoincrement()) // ID 필드를 itemId로 수정
+  itemId      Int         @id @default(autoincrement())
   name       String      @unique
   price       Int         @default(0)  // 아이템 가격
   stats       Json        // 아이템의 스탯을 JSON으로 관리 (Health와 Strength 포함)
-
+vc 
   inventory   Inventory[]
   equippedItems EquippedItem[]
   @@map("Item")
 }
 
 model Inventory {
-  inventoryId Int         @id @default(autoincrement()) // ID 필드를 inventoryId로 수정
+  inventoryId Int         @id @default(autoincrement())
   characterId Int
   itemId      Int
   quantity    Int         @default(1)
 
-  character   Character   @relation(fields: [characterId], references: [characterId])
-  item        Item        @relation(fields: [itemId], references: [itemId])
+  character   Character   @relation(fields: [characterId], references: [characterId], onDelete: Cascade)
+  item        Item        @relation(fields: [itemId], references: [itemId], onDelete: Cascade)
   @@map("Inventory")
 }
 
 model EquippedItem {
-  equippedItemId Int      @id @default(autoincrement()) // ID 필드를 equippedItemId로 수정
+  equippedItemId Int      @id @default(autoincrement())
   characterId    Int
   itemId         Int
-
-  character      Character @relation(fields: [characterId], references: [characterId])
-  item           Item      @relation(fields: [itemId], references: [itemId])
+  character      Character @relation(fields: [characterId], references: [characterId], onDelete: Cascade)
+  item           Item      @relation(fields: [itemId], references: [itemId], onDelete: Cascade)
   @@map("EquippedItem")
 }
