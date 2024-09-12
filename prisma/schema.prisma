@@ -37,7 +37,6 @@ model Item {
   name       String      @unique
   price       Int         @default(0)  // 아이템 가격
   stats       Json        // 아이템의 스탯을 JSON으로 관리 (Health와 Strength 포함)
-vc 
   inventory   Inventory[]
   equippedItems EquippedItem[]
   @@map("Item")
