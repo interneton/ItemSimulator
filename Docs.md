@@ -1,17 +1,16 @@
-I can help you create a comprehensive `DOCS.md` file for your project. Based on the provided files, here is a draft of the documentation for the API endpoints and their respective functionalities.
 
 ---
 
-# API Documentation
+# API 문서
 
-This document outlines the API routes and their corresponding functionality for the character, item, and user management system.
+이 문서는 캐릭터, 아이템 및 사용자 관리를 위한 API 경로와 해당 기능을 설명합니다.
 
-## Authentication
+## 인증
 
-### 1. **User Registration**
-   - **Endpoint:** `POST /auth/register`
-   - **Description:** Registers a new user.
-   - **Body:**
+### 1. **사용자 회원가입**
+   - **엔드포인트:** `POST /auth/register`
+   - **설명:** 새로운 사용자를 등록합니다.
+   - **요청 본문:**
      ```json
      {
        "userId": "string",
@@ -19,103 +18,103 @@ This document outlines the API routes and their corresponding functionality for 
        "confirmPassword": "string"
      }
      ```
-   - **Response:**
-     - `201 Created`: User successfully registered.
-     - `400 Bad Request`: User already exists or password mismatch.
+   - **응답:**
+     - `201 Created`: 사용자 등록 성공.
+     - `400 Bad Request`: 사용자 이미 존재하거나 비밀번호 불일치.
 
-### 2. **User Login**
-   - **Endpoint:** `POST /auth/login`
-   - **Description:** Logs in an existing user and returns a JWT token.
-   - **Body:**
+### 2. **사용자 로그인**
+   - **엔드포인트:** `POST /auth/login`
+   - **설명:** 기존 사용자 로그인 후 JWT 토큰을 반환합니다.
+   - **요청 본문:**
      ```json
      {
        "userId": "string",
        "password": "string"
      }
      ```
-   - **Response:**
-     - `200 OK`: Returns the JWT token on successful login.
-     - `401 Unauthorized`: Invalid credentials.
+   - **응답:**
+     - `200 OK`: 성공적으로 로그인 후 JWT 토큰 반환.
+     - `401 Unauthorized`: 잘못된 인증 정보.
 
 ---
 
-## Characters
+## 캐릭터
 
-### 1. **Create a Character**
-   - **Endpoint:** `POST /characters/create`
-   - **Authentication:** Required (JWT)
-   - **Description:** Creates a new character for the logged-in user.
-   - **Body:**
+### 1. **캐릭터 생성**
+   - **엔드포인트:** `POST /characters/create`
+   - **인증 필요:** JWT
+   - **설명:** 로그인한 사용자에게 새로운 캐릭터를 생성합니다.
+   - **요청 본문:**
      ```json
      {
        "name": "string"
      }
      ```
-   - **Response:**
-     - `201 Created`: Character successfully created.
-     - `400 Bad Request`: Character with the same name already exists or invalid input.
+   - **응답:**
+     - `201 Created`: 캐릭터 생성 성공.
+     - `400 Bad Request`: 중복된 이름 또는 잘못된 입력.
 
-### 2. **Delete a Character**
-   - **Endpoint:** `DELETE /characters/delete/:characterId`
-   - **Authentication:** Required (JWT)
-   - **Description:** Deletes the specified character owned by the logged-in user.
-   - **Response:**
-     - `200 OK`: Character successfully deleted.
-     - `403 Forbidden`: User does not own the character.
-     - `404 Not Found`: Character does not exist.
+### 2. **캐릭터 삭제**
+   - **엔드포인트:** `DELETE /characters/delete/:characterId`
+   - **인증 필요:** JWT
+   - **설명:** 로그인한 사용자가 소유한 특정 캐릭터를 삭제합니다.
+   - **응답:**
+     - `200 OK`: 캐릭터 삭제 성공.
+     - `403 Forbidden`: 사용자가 캐릭터를 소유하지 않음.
+     - `404 Not Found`: 캐릭터가 존재하지 않음.
 
-### 3. **Get All Characters**
-   - **Endpoint:** `GET /characters/all`
-   - **Description:** Fetches all available characters.
-   - **Response:**
-     - `200 OK`: Returns a list of characters with their health and strength.
+### 3. **모든 캐릭터 조회**
+   - **엔드포인트:** `GET /characters/all`
+   - **설명:** 모든 캐릭터를 조회합니다.
+   - **응답:**
+     - `200 OK`: 캐릭터 목록 반환.
 
-### 4. **Get Character Details**
-   - **Endpoint:** `GET /characters/:characterId`
-   - **Authentication:** Required (JWT)
-   - **Description:** Fetches detailed information about a specific character.
-   - **Response:**
-     - `200 OK`: Returns character details.
-     - `404 Not Found`: Character does not exist.
+### 4. **캐릭터 세부 정보 조회**
+   - **엔드포인트:** `GET /characters/:characterId`
+   - **인증 필요:** JWT
+   - **설명:** 특정 캐릭터의 세부 정보를 조회합니다.
+   - **응답:**
+     - `200 OK`: 캐릭터 세부 정보 반환.
+     - `404 Not Found`: 캐릭터가 존재하지 않음.
 
-### 5. **Earn Money for a Character**
-   - **Endpoint:** `POST /characters/earn-money/:characterId`
-   - **Authentication:** Required (JWT)
-   - **Description:** Adds a specified amount of money to the character.
-   - **Body:**
+### 5. **캐릭터 돈 벌기**
+   - **엔드포인트:** `POST /characters/earn-money/:characterId`
+   - **인증 필요:** JWT
+   - **설명:** 캐릭터에게 지정된 금액을 추가합니다.
+   - **요청 본문:**
      ```json
      {
        "amount": "number"
      }
      ```
-   - **Response:**
-     - `200 OK`: Money successfully added to the character.
-     - `404 Not Found`: Character does not exist.
+   - **응답:**
+     - `200 OK`: 돈이 성공적으로 추가됨.
+     - `404 Not Found`: 캐릭터가 존재하지 않음.
 
-### 6. **Get Character Inventory**
-   - **Endpoint:** `GET /characters/inventory/:characterId`
-   - **Authentication:** Required (JWT)
-   - **Description:** Fetches the inventory items of the specified character.
-   - **Response:**
-     - `200 OK`: Returns the inventory items.
-     - `404 Not Found`: Character or inventory does not exist.
+### 6. **캐릭터 인벤토리 조회**
+   - **엔드포인트:** `GET /characters/inventory/:characterId`
+   - **인증 필요:** JWT
+   - **설명:** 지정된 캐릭터의 인벤토리 아이템을 조회합니다.
+   - **응답:**
+     - `200 OK`: 인벤토리 아이템 반환.
+     - `404 Not Found`: 캐릭터 또는 인벤토리가 존재하지 않음.
 
-### 7. **Get Equipped Items**
-   - **Endpoint:** `GET /characters/equipped/:characterId`
-   - **Authentication:** Required (JWT)
-   - **Description:** Fetches the equipped items of the specified character.
-   - **Response:**
-     - `200 OK`: Returns the equipped items.
-     - `404 Not Found`: Character or equipped items do not exist.
+### 7. **캐릭터 장착한 아이템 조회**
+   - **엔드포인트:** `GET /characters/equipped/:characterId`
+   - **인증 필요:** JWT
+   - **설명:** 지정된 캐릭터의 장착된 아이템을 조회합니다.
+   - **응답:**
+     - `200 OK`: 장착된 아이템 반환.
+     - `404 Not Found`: 캐릭터 또는 장착된 아이템이 존재하지 않음.
 
 ---
 
-## Items
+## 아이템
 
-### 1. **Create an Item**
-   - **Endpoint:** `POST /items/create`
-   - **Description:** Creates a new item.
-   - **Body:**
+### 1. **아이템 생성**
+   - **엔드포인트:** `POST /items/create`
+   - **설명:** 새로운 아이템을 생성합니다.
+   - **요청 본문:**
      ```json
      {
        "name": "string",
@@ -126,13 +125,13 @@ This document outlines the API routes and their corresponding functionality for 
        }
      }
      ```
-   - **Response:**
-     - `201 Created`: Item successfully created.
+   - **응답:**
+     - `201 Created`: 아이템 생성 성공.
 
-### 2. **Update an Item**
-   - **Endpoint:** `PUT /items/update/:itemId`
-   - **Description:** Updates an existing item.
-   - **Body:**
+### 2. **아이템 수정**
+   - **엔드포인트:** `PUT /items/update/:itemId`
+   - **설명:** 기존 아이템을 수정합니다.
+   - **요청 본문:**
      ```json
      {
        "name": "string",
@@ -143,97 +142,91 @@ This document outlines the API routes and their corresponding functionality for 
        }
      }
      ```
-   - **Response:**
-     - `200 OK`: Item successfully updated.
-     - `404 Not Found`: Item does not exist.
+   - **응답:**
+     - `200 OK`: 아이템 수정 성공.
+     - `404 Not Found`: 아이템이 존재하지 않음.
 
-### 3. **Get All Items**
-   - **Endpoint:** `GET /items/list`
-   - **Description:** Fetches all available items.
-   - **Response:**
-     - `200 OK`: Returns the list of items.
+### 3. **모든 아이템 조회**
+   - **엔드포인트:** `GET /items/list`
+   - **설명:** 모든 아이템을 조회합니다.
+   - **응답:**
+     - `200 OK`: 아이템 목록 반환.
 
-### 4. **Get Item Details**
-   - **Endpoint:** `GET /items/:itemId`
-   - **Description:** Fetches details of a specific item.
-   - **Response:**
-     - `200 OK`: Returns item details.
-     - `404 Not Found`: Item does not exist.
+### 4. **아이템 세부 정보 조회**
+   - **엔드포인트:** `GET /items/:itemId`
+   - **설명:** 특정 아이템의 세부 정보를 조회합니다.
+   - **응답:**
+     - `200 OK`: 아이템 세부 정보 반환.
+     - `404 Not Found`: 아이템이 존재하지 않음.
 
-### 5. **Purchase an Item**
-   - **Endpoint:** `POST /items/purchase/:characterId`
-   - **Authentication:** Required (JWT)
-   - **Description:** Purchases an item for the specified character.
-   - **Body:**
+### 5. **아이템 구매**
+   - **엔드포인트:** `POST /items/purchase/:characterId`
+   - **인증 필요:** JWT
+   - **설명:** 지정된 캐릭터에게 아이템을 구매합니다.
+   - **요청 본문:**
      ```json
      {
        "itemId": "number",
        "quantity": "number"
      }
      ```
-   - **Response:**
-     - `200 OK`: Item successfully purchased.
-     - `404 Not Found`: Item or character does not exist.
-     - `400 Bad Request`: Insufficient funds or invalid data.
+   - **응답:**
+     - `200 OK`: 아이템 구매 성공.
+     - `404 Not Found`: 아이템 또는 캐릭터가 존재하지 않음.
+     - `400 Bad Request`: 잔액 부족 또는 잘못된 데이터.
 
-### 6. **Sell an Item**
-   - **Endpoint:** `POST /items/sell/:characterId`
-   - **Authentication:** Required (JWT)
-   - **Description:** Sells an item from the specified character's inventory.
-   - **Body:**
+### 6. **아이템 판매**
+   - **엔드포인트:** `POST /items/sell/:characterId`
+   - **인증 필요:** JWT
+   - **설명:** 지정된 캐릭터의 인벤토리에서 아이템을 판매합니다.
+   - **요청 본문:**
      ```json
      {
        "itemId": "number",
        "quantity": "number"
      }
      ```
-   - **Response:**
-     - `200 OK`: Item successfully sold.
-     - `404 Not Found`: Item or character does not exist.
-     - `400 Bad Request`: Insufficient quantity or invalid data.
+   - **응답:**
+     - `200 OK`: 아이템 판매 성공.
+     - `404 Not Found`: 아이템 또는 캐릭터가 존재하지 않음.
+     - `400 Bad Request`: 수량 부족 또는 잘못된 데이터.
 
-### 7. **Equip an Item**
-   - **Endpoint:** `POST /items/equip/:characterId`
-   - **Authentication:** Required (JWT)
-   - **Description:** Equips an item to the specified character.
-   - **Body:**
+### 7. **아이템 장착**
+   - **엔드포인트:** `POST /items/equip/:characterId`
+   - **인증 필요:** JWT
+   - **설명:** 지정된 캐릭터에게 아이템을 장착합니다.
+   - **요청 본문:**
      ```json
      {
        "itemId": "number"
      }
      ```
-   - **Response:**
-     - `200 OK`: Item successfully equipped.
-     - `400 Bad Request`: Item is already equipped.
-     - `404 Not Found`: Item or character does not exist.
+   - **응답:**
+     - `200 OK`: 아이템 장착 성공.
+     - `400 Bad Request`: 아이템이 이미 장착됨.
+     - `404 Not Found`: 아이템 또는 캐릭터가 존재하지 않음.
 
-### 8. **Unequip an Item**
-   - **Endpoint:** `POST /items/unequip/:characterId`
-   - **Authentication:** Required (JWT)
-   - **Description:** Unequips an item from the specified character.
-   - **Body:**
+### 8. **아이템 탈착**
+   - **엔드포인트:** `POST /items/unequip/:characterId`
+   - **인증 필요:** JWT
+   - **설명:** 지정된 캐릭터에게서 아이템을 탈착합니다.
+   - **요청 본문:**
      ```json
      {
        "itemId": "number"
      }
      ```
-   - **Response:**
-     - `200 OK`: Item successfully unequipped.
-     - `404 Not Found`: Item or character does not exist.
+   - **응답:**
+     - `200 OK`: 아이템 탈착 성공.
+     - `404 Not Found`: 아이템 또는 캐릭터가 존재하지 않음.
 
 ---
 
-## Error Handling
-All endpoints return appropriate HTTP status codes based on the outcome of the request. In case of an error, a response will include a descriptive message and the relevant status code.
+## 오류 처리
+모든 엔드포인트는 요청의 결과에 따라 적절한 HTTP 상태 코드를 반환합니다. 오류 발생 시 응답은 설명 메시지와 해당 상태 코드를 포함합니다.
 
-- **200 OK**: The request was successful.
-- **201 Created**: The resource was successfully created.
-- **400 Bad Request**: The request was invalid (e.g., missing required fields, invalid input).
-- **401 Unauthorized**: The request requires user authentication.
-- **403 Forbidden**: The user does not have permission to perform the action.
-- **404 Not Found**: The requested resource does not exist.
-- **500 Internal Server Error**: A server error occurred.
-
----
-
-This should cover the key aspects of your API. Let me know if you need any additional sections or further adjustments!
+- **200 OK**: 요청이 성공했습니다.
+- **201 Created**: 리소스가 성공적으로 생성되었습니다.
+- **400 Bad Request**: 요청이 잘못되었습니다(예: 필수 필드 누락, 잘못된 입력).
+- **401 Unauthorized**: 사용자 인증이 필요합니다.
+- **403 Forbidden**: 사용자가 이 작업을 수행할 권한이 없습니다.
