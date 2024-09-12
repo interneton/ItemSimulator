@@ -21,36 +21,36 @@
 
 ## 설치 방법
 
-1. 저장소 클론:
+1. **저장소 클론**
    ```bash
    git clone git@github.com:interneton/ItemSimulator.git
    ```
    
-2. 프로젝트 디렉토리로 이동:
+2. **프로젝트 디렉토리로 이동**
    ```bash
    cd project-name
    ```
    
-3. 패키지 설치:
+3. **패키지 설치**
    ```bash
-   npm install
+   yarn install
    ```
 
-4. 환경 변수 설정:
-   `.env` 파일을 생성하여 다음 변수들을 설정:
+4. **환경 변수 설정**
+   `.env` 파일을 생성하여 다음 변수들을 설정
    ```
    DATABASE_URL=your_database_url
    JWT_SECRET=your_jwt_secret
    ```
 
-5. Prisma 마이그레이션 실행:
+5. **Prisma 마이그레이션 실행**
    ```bash
    npx prisma migrate dev
    ```
 
-6. 서버 실행:
+6. **서버 실행**
    ```bash
-   npm start
+   yarn start
    ```
 
 ## API 문서
