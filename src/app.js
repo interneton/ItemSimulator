@@ -28,5 +28,5 @@ app.use(errorHandler);
 
 // 서버 시작
 app.listen(config.port, () => {
-  console.log('포트 3000 서버가 시작');
+  console.log(`포트 ${config.port} 서버가 시작`);
 });
